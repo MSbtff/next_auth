@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, {CredentialsSignin} from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GitHub from 'next-auth/providers/github';
 import {User} from './lib/schema';
@@ -16,20 +16,20 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
       async authorize(credentials) {
         console.log('credentials', credentials);
         const {email, password} = credentials;
-        if (email || password) {
-          throw new Error('입력값이 부족합니다.');
+        if (!email || !password) {
+          throw new CredentialsSignin('입력값이 부족합니다.');
         }
         // DB 연결
         connectDB();
         const user = await User.findOne({email}).select('+password +role');
         if (!user) {
-          throw new Error('가입되지 않은 회원입니다.');
+          throw new CredentialsSignin('가입되지 않은 회원입니다.');
         }
 
         //사용자가 입력한 비밀번호 데이터 베이스의 비밀번호 일치하는지 확인
         const isMatched = await compare(String(password), user.password);
         if (!isMatched) {
-          throw new Error('비밀번호가 일치하지 않습니다.');
+          throw new CredentialsSignin('비밀번호가 일치하지 않습니다.');
         }
 
         // 유효한 사용자다
@@ -52,16 +52,22 @@ export const {handlers, signIn, signOut, auth} = NextAuth({
       if (account?.provider === 'github') {
         const {name, email} = user;
         await connectDB();
-        const existingUser = await User.findOne({authProviderId: user.id});
+        const existingUser = await User.findOne({
+          email,
+          authProviderId: 'github',
+        });
         if (!existingUser) {
           await new User({
             name,
             email,
-            authProviderId: user.id,
+            authProviderId: 'github',
             role: 'user',
           }).save();
         }
-        const socialUser = await User.findOne({authProviderId: user.id});
+        const socialUser = await User.findOne({
+          email,
+          authProviderId: 'github',
+        });
 
         user.role = socialUser?.role || 'user';
         user.id = socialUser?._id;

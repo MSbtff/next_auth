@@ -16,10 +16,10 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
               <Link href="/">home</Link>
             </li>
             <li>
-              <Link href="/auth/login">login</Link>
+              <Link href="/login">login</Link>
             </li>
             <li>
-              <Link href="/auth/register">register</Link>
+              <Link href="/register">register</Link>
             </li>
             <li>
               <Link href="/dashboard">dashboard</Link>

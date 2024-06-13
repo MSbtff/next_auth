@@ -1,3 +1,4 @@
+import {logout} from '@/lib/action';
 import Link from 'next/link';
 
 export const metadata = {
@@ -23,6 +24,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
             <li>
               <Link href="/dashboard">dashboard</Link>
             </li>
+            <form action={logout}>
+              <button>logout</button>
+            </form>
           </ul>
         </div>
         {children}

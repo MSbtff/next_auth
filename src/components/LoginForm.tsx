@@ -6,7 +6,7 @@ export default function LoginForm() {
       <form action={login}>
         <input type="text" name="email" placeholder="Enter your email"></input>
         <input
-          type="text"
+          type="password"
           name="password"
           placeholder="Enter your password"
         ></input>

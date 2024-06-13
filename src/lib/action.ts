@@ -1,6 +1,6 @@
 'use server';
 
-import {auth, signIn} from '@/auth';
+import {auth, signIn, signOut} from '@/auth';
 import {User} from './schema';
 import {hash} from 'bcryptjs';
 import {redirect} from 'next/navigation';
@@ -63,4 +63,8 @@ export async function githubLogin() {
   } catch (err) {
     console.log(err);
   }
+}
+
+export async function logout() {
+  await signOut();
 }

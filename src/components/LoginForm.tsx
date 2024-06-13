@@ -1,3 +1,4 @@
+import {signIn} from '@/auth';
 import {githubLogin, login} from '@/lib/action';
 
 export default function LoginForm() {
@@ -12,8 +13,13 @@ export default function LoginForm() {
         ></input>
         <button>로그인</button>
       </form>
-      <form action={githubLogin}>
-        <button>GITHUB 로그인</button>
+      <form
+        action={async () => {
+          'use server';
+          await signIn('github');
+        }}
+      >
+        <button type="submit">GITHUB 로그인</button>
       </form>
     </>
   );
